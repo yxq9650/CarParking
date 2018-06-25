@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxq.carpark.dao.ParkinfoallDao">
+	<select id="findAllParkinfoall" resultType="com.yxq.carpark.dto.ParkinfoallData">
+		SELECT * from parkinfoall limit #{page},#{size}
+	</select>
+	<select id="findAllParkinfoallByLike" resultType="com.yxq.carpark.dto.ParkinfoallData">
+		SELECT * from parkinfoall t where t.cardnum like '%${name}%' || t.carnum like '%${name}%' || t.parknum like '%${name}%' limit #{page},#{size}
+	</select>
+	<insert id="save">
+		insert into parkinfoall (cardnum,parknum,carnum,parkin,parkout,parktemp) values(#{cardnum},#{parknum},#{carnum},#{parkin},#{parkout},#{parktemp})
+	</insert>
+	<select id="findById" resultType="com.yxq.carpark.dto.ParkinfoallData">
+		SELECT * from parkinfoall p where p.id=#{id}
+	</select>
+	<select id="findAllParkinfoallCount" resultType="int">
+		SELECT count(*) from parkinfoall t where t.cardnum like '%${name}%' || t.carnum like '%${name}%' || t.parknum like '%${name}%'
+	</select>
+	<select id="findByCardNum" resultType="com.yxq.carpark.dto.ParkinfoallData">
+		SELECT * from parkinfoall t where t.cardnum = #{cardnum} 
+		<if test="name!=''">
+		and t.carnum like '%${name}%'
+		</if>
+	</select>
+	<select id="findByCardNumByPage" resultType="com.yxq.carpark.dto.ParkinfoallData">
+		SELECT * from parkinfoall t where t.cardnum = #{cardnum} 
+		<if test="name!=''">
+		and t.carnum like '%${name}%'
+		</if>
+		limit #{page},#{size}
+	</select>
+	<update id="updateCardnum">
+		update parkinfoall set cardnum=#{cardnumNew} where cardnum=#{cardnum}
+	</update>
+</mapper>

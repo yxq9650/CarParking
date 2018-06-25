@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxq.carpark.dao.ParkinfoDao">
+<!-- <cache type="com.depot.ex.utils.RedisCache"/> -->
+	<insert id="save" parameterType="com.yxq.carpark.entity.ParkInfo">
+		INSERT INTO parkinfo(parknum,cardnum,carnum,parkin,parktemp) value(#{parknum},#{cardnum},#{carnum},#{parkin},#{parktem})
+	</insert>
+	<select id="findParkinfoByParknum" parameterType="int" resultType="com.yxq.carpark.entity.ParkInfo" >
+		SELECT * FROM parkinfo where parknum=#{parknum}
+	</select>
+	<select id="findParkinfoByCardnum" parameterType="String" resultType="com.yxq.carpark.entity.ParkInfo" >
+		SELECT * FROM parkinfo where cardnum=#{cardnum} 
+	</select>
+	<delete id="deleteParkinfoByParkNum" parameterType="int">
+		DELETE FROM parkinfo where parknum = #{parknum}
+	</delete>
+	<update id="updateCardnum">
+		update parkinfo set cardnum=#{cardnumNew} where cardnum=#{cardnum}
+	</update>
+</mapper>

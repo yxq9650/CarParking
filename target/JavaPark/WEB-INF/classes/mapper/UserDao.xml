@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxq.carpark.dao.UserDao">
+<cache eviction="LRU" type="com.yxq.carpark.utils.RedisCache"/>
+	<insert id="save" parameterType="com.yxq.carpark.entity.User">
+		<!-- 将MySQL的自增主键(即刚刚插入数据时生成的ID)返回 -->
+		<!-- <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID();
+		</selectKey> -->
+		INSERT INTO user(username,name,password,sex,tel,role) values(#{username},#{name},#{password},#{sex},#{tel},#{role})
+	</insert>
+	<select id="findUserById" resultType="com.yxq.carpark.entity.User" parameterType="int">
+		SELECT * FROM user where id=#{id}
+	</select>
+	<select id="findUserByCardid" resultType="com.yxq.carpark.entity.User" parameterType="int">
+		SELECT * FROM user where cardid=#{cardid}
+	</select>
+	<select id="findUserByUserName" resultType="com.yxq.carpark.entity.User" parameterType="String">
+		SELECT * FROM user where username=#{username}
+	</select>
+	<select id="findAllUser" resultType="com.yxq.carpark.entity.User" >
+		SELECT u.*,c.cardnum FROM user u left join card c on c.id=u.cardid limit #{page},#{size}
+	</select>
+	<select id="findUsersByRole" resultType="com.yxq.carpark.entity.User" >
+		SELECT u.*,c.cardnum FROM user u left join card c on c.id=u.cardid where 1=1
+		<if test="role>0">
+		and u.role=#{role} 
+		</if>
+		limit #{page},#{size}
+	</select>
+	<select id="findUsersByRoleMan" resultType="com.yxq.carpark.entity.User" >
+		SELECT u.*,c.cardnum FROM user u left join card c on c.id=u.cardid where 1=1
+		<if test="role==0">
+			and (u.role=2 || u.role=3)
+		</if>
+		<if test="role!=0">
+			and u.role=#{role}
+		</if>														
+		limit #{page},#{size}
+	</select>
+	<insert id="saveByaddDepotCard">
+		INSERT INTO user(username,name,password,tel,cardid) values(#{username},#{name},#{username},#{username},#{cardid})
+	</insert>
+	<update id="update">
+		UPDATE user SET 
+		username=#{username},name=#{name},password=#{password},tel=#{tel},cardid=#{cardid},sex=#{sex},role=#{role} where id=#{id}
+	</update>
+	<delete id="deleteUserByCardid" parameterType="int">
+		DELETE from user where cardid=#{cardid}
+	</delete>
+	<delete id="delUserById" parameterType="int">
+		DELETE from user where id=#{uid}
+	</delete>
+	<select id="findAllUserCount" resultType="int">
+		SELECT count(*) FROM user u where 1=1 
+		<if test="role!=0">
+		and u.role=#{role}
+		</if>
+	</select>
+	<select id="findAllUserCountMan" resultType="int">
+		SELECT count(*) FROM user u where 1=1
+		<if test="role!=0">
+			and u.role=#{role}
+		</if>
+		<if test="role==0">
+			and u.role=2 and u.role=3
+		</if>
+	</select>
+	<select id="finAllUserByRole" resultType="com.yxq.carpark.entity.User">
+		select * from user u where u.role=#{role}
+	</select>
+</mapper>

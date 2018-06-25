@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxq.carpark.dao.EmailDao">
+
+<insert id="addEmial" parameterType="com.yxq.carpark.entity.Email">
+	insert into email(sendid,toid,title,content,time) values(#{sendid},#{toid},#{title},#{content},#{time})
+</insert>
+<select id="findById" resultType="com.yxq.carpark.entity.Email">
+	select * from email t where t.id=#{id} 
+</select>
+<select id="findByToId" resultType="com.yxq.carpark.dto.EmailData">
+	select * from email t where t.toid=#{id} 
+</select>
+<update id="updateManReadById">
+	update email set managerisread=1 where id=#{id}
+</update>
+<select id="findByUserId" resultType="com.yxq.carpark.dto.EmailData">
+	select t.* from email t where 1=1 
+	<if test="role==3">
+		and (sendid =#{uid} or toid=#{uid}) and userdeleted=0 and title like '%${content}%'  
+		<if test="tag==0">
+		and userisread=0 and sendid!=#{uid}
+		</if>
+		<if test="tag==1">
+		and userisread=1 and sendid!=#{uid}
+		</if>
+		<if test="tag==2">
+		and toid=0
+		</if>
+		order by userisread,time asc limit #{page},#{size}
+	</if>
+	<if test="role!=3">
+		and (sendid=#{uid} or toid=0) and managedelete=0 and title like '%${content}%' 
+		<if test="tag==0">
+		and managerisread=0 and sendid !=#{uid}
+		</if>
+		<if test="tag==1">
+		and managerisread>1 and sendid!=#{uid}
+		</if>
+		<if test="tag==2">
+		and sendid=#{uid}
+		</if>
+		order by managerisread,time asc limit #{page},#{size}
+	</if>
+</select> 
+<select id="findAllEmailCountByUser" resultType="int">
+	select count(*) from email t where 1=1
+	<if test="role==3">
+		and (sendid =#{uid} or toid=#{uid}) and userdeleted=0 
+	</if>
+	<if test="role!=3">
+		and (sendid=#{uid} or toid=0)  and managedelete=0 
+	</if>
+</select>
+<update id="updateEmail" parameterType="com.yxq.carpark.entity.Email">
+	update email set sendid=#{sendid},toid=#{toid},title=#{title},content=#{content},
+	time=#{time},managerisread=#{managerisread},userisread=#{userisread},userdeleted=#{userdeleted},
+	managedelete=#{managedelete} where id=#{id}
+</update>
+	<delete id="deleteEmail" parameterType="int">
+		DELETE from email where id=#{id}
+	</delete>
+</mapper>

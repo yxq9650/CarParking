@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxq.carpark.dao.IncomeDao">
+	<insert id="save">
+		insert into income(money,method,type,carnum,cardnum,isillegal,source,time,duration)
+		values(#{money},#{method},#{type},#{carnum},#{cardnum},#{isillegal},#{source},#{time},#{duration})
+	</insert>
+	<select id="findAllIncome" resultType="com.yxq.carpark.dto.IncomeData">
+		select * from income i where 1=1 
+		<if test="content != null and content != ''">
+		and (i.carnum like '%${content}%' || i.cardnum like '%${content}%')
+		</if>
+		<if test="startTime != null and startTime != '' ">
+		and i.time &gt; #{startTime}
+		</if>
+		<if test="endTime != null and endTime != '' ">
+		and i.time &lt; #{endTime}
+		</if>
+		<if test="num != 9 ">
+		and i.method=#{num}
+		</if>
+		 order by i.id desc limit #{page},#{size}                                                                                                                                                                                                                                                                                                                                                                   
+	</select>
+	<select id="findAllIncome1" resultType="com.yxq.carpark.dto.IncomeData">
+		select * from income i where 1=1 
+		<if test="content != null and content != ''">
+		and (i.carnum like '%${content}%' || i.cardnum like '%${content}%')
+		</if>
+		<if test="startTime != null and startTime != '' ">
+		and i.time &gt; #{startTime}
+		</if>
+		<if test="endTime != null and endTime != '' ">
+		and i.time &lt; #{endTime}
+		</if>
+		<if test="num != 9 ">
+		and i.method=#{num}
+		</if>
+	</select>
+	<select id="findById" resultType="com.yxq.carpark.entity.Income">
+		select * from income i where i.id=#{id};
+	</select>
+	<select id="findPayByType" resultType="int">
+		select sum(money) from income i where i.method=#{method};
+	</select>
+	<select id="findAllIncomeCount" resultType="int">
+		select count(*) from income i where 1=1 
+		<if test="content != null and content != ''">
+		and (i.carnum like '%${content}%' || i.cardnum like '%${content}%')
+		</if>
+		<if test="startTime != null and startTime != '' ">
+		and i.time &gt; #{startTime}
+		</if>
+		<if test="endTime != null and endTime != '' ">
+		and i.time &lt; #{endTime}
+		</if>
+		<if test="num != 9 ">
+		and i.method=#{num}
+		</if>
+	</select>
+	<update id="updateCardnum">
+		update income set cardnum=#{cardnumNew} where cardnum=#{cardnum}
+	</update>
+</mapper>

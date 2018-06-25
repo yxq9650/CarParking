@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxq.carpark.dao.ParkspaceDao">
+<!-- <cache type="com.depot.ex.utils.RedisCache"/> -->
+	<insert id="save" parameterType="com.yxq.carpark.entity.ParkSpace">
+		INSERT INTO parkspace(parkid) value(#{parkid})
+	</insert>
+	<select id="findMaxSpace" resultType="int">
+		SELECT count(*) FROM parkspace
+	</select>
+	<select id="findNowParkspace" resultType="int">
+		select count(*) from parkspace where status=#{status}
+	</select>
+	<select id="findAllParkspace" resultType="com.yxq.carpark.entity.ParkSpace">
+		SELECT * FROM parkspace p order by parkid,status,tag LIMIT #{page},#{size}
+	</select>
+	<select id="findParkspaceByTag" resultType="com.yxq.carpark.entity.ParkSpace">
+		SELECT * FROM parkspace where 1=1
+		 <if test="tag !=0">
+		 <if test="tag == 4">
+			and status = 0
+		 </if>
+		 <if test="tag != 4">
+			and tag=#{tag}
+		 </if> 
+		 </if>
+		 order by parkid LIMIT #{page},#{size}
+	</select>
+	<update id="changeStatus">
+		UPDATE parkspace SET status=${status} WHERE id=${id}
+	</update>
+	<update id="changeStatusByParkNum">
+		UPDATE parkspace SET status=${status} WHERE parkid = ${parkNum}
+	</update>
+	<select id="findAllParkspaceCount" resultType="int">
+		select count(*) from parkspace where 1=1 
+		<if test="tag !=0">
+		<if test="tag == 4">
+		and status = 0
+		</if>
+		<if test="tag != 4">
+		and tag=#{tag}
+		</if>
+		</if>
+	</select>
+</mapper>

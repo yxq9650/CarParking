@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxq.carpark.dao.IllegalInfoDao">
+<cache eviction="LRU" type="com.yxq.carpark.utils.RedisCache"/>
+<insert id="save" parameterType="com.yxq.carpark.entity.IllegalInfo">
+	INSERT INTO illegalinfo(cardnum,illegalInfo,time,uid,carnum,parkin,deleted) values(#{cardnum},#{illegalInfo},#{time},#{uid},#{carnum},#{parkin},#{delete})
+</insert>
+<select id="findAllIllegalInfo" resultType="com.yxq.carpark.entity.IllegalInfo">
+	select i.*,u.username from illegalinfo i,user u where i.uid=u.id and (i.cardnum like '%${name}%' || i.carnum like '%${name}%') order by id desc limit #{page},#{size}
+</select>
+<select id="findById" resultType="com.yxq.carpark.entity.IllegalInfo">
+	select * from illegalinfo i where i.id=#{id}
+</select>
+<delete id="deleteById">
+	delete from illegalinfo where id=#{id} 
+</delete>
+<select id="findByCarnum" resultType="com.yxq.carpark.entity.IllegalInfo">
+	select * from illegalinfo i where i.carnum=#{carnum} and i.parkin=#{parkin}
+</select>
+<select id="findByCardnum" resultType="com.yxq.carpark.entity.IllegalInfo">
+	select * from illegalinfo i where i.cardnum=#{cardnum}
+</select>
+<select id="findByCardnumParkin" resultType="com.yxq.carpark.entity.IllegalInfo">
+	select * from illegalinfo i where i.cardnum=#{cardnum} and i.parkin=#{parkin}
+</select>
+<select id="findAllIllegalInfoCount" resultType="int">
+	select count(*) from illegalinfo i where i.cardnum like '%${name}%' || i.carnum like '%${name}%'
+</select>
+<select id="findByUid" resultType="com.yxq.carpark.entity.IllegalInfo">
+	select * from illegalinfo i where i.uid=#{uid}
+</select>
+<update id="updateCardnum">
+	update illegalinfo set cardnum=#{cardnumNew} where cardnum=#{cardnum}
+</update>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxq.carpark.dao.CouponDao">
+	
+	<select id="findAllCoupon" resultType="com.yxq.carpark.dto.CouponData">
+		select * from coupon t where t.couponNum like '%${name}%' || t.cardnum like '%${name}%' limit #{page},#{size}
+	</select>
+	<select id="findAllDepotcardCount" resultType="int">
+		select count(*) from coupon t where t.couponNum like '%${name}%' || t.cardnum like '%${name}%'
+	</select>
+	<select id="findCouponById" resultType="com.yxq.carpark.entity.Coupon">
+		select * from coupon t where t.id=#{id}
+	</select>
+	<delete id="deleteCoupon" parameterType="int">
+		DELETE from coupon where id=#{id}
+	</delete>
+	<select id="findAllCouponByCardNum" resultType="com.yxq.carpark.dto.CouponData">
+		select * from coupon t where t.cardnum=#{cardnum}
+		<if test="name!=''">
+			and t.couponNum like '%${name}%'
+		</if>
+		order by t.money desc
+	</select>
+	<update id="updateCardnum">
+		update coupon set cardnum=#{cardnumNew} where cardnum=#{cardnum}
+	</update>
+	<insert id="addCoupon">
+		insert into coupon(couponNum,money,cardnum,time) values(#{couponNum},#{money},#{cardnum},#{time})
+	</insert>
+</mapper>	
