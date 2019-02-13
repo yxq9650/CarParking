@@ -141,7 +141,19 @@
 			<artifactId>jedis</artifactId>
 			<version>2.6.0</version>
 		</dependency>
-
+		
+		<!-- Shiro start -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-web</artifactId>
+			<version>1.2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+			<version>1.2.4</version>
+		</dependency>
+		<!-- Shiro end -->
 
 		<!-- openCV -->
 		<dependency>
@@ -160,7 +172,7 @@
 			<artifactId>cxf-core</artifactId>
 			<version>3.1.5</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -195,6 +207,20 @@
 	</dependencies>
 	 <build>
         <finalName>JavaPark</finalName>
+        <plugins>
+			<!-- tomcat 容器的 maven 插件配置，用于启动项目 -->
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat8-maven-plugin</artifactId>
+				<version>3.0-r1655215</version>
+				<configuration>
+					<port>8080</port>
+					<path>/depot-system</path>
+					<uriEncoding>UTF-8</uriEncoding>
+					<server>tomcat8</server>
+				</configuration>
+			</plugin>
+		</plugins>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -205,7 +231,7 @@
             </resource>
             <!--指定资源的位置-->
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>src/resource</directory>
             </resource>
         </resources>
     </build>
