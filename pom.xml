@@ -195,7 +195,7 @@
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
-			<version>3.2</version>
+			<version>3.2.2</version>
 		</dependency>
 		<!--POI-->
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
